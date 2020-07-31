@@ -1,0 +1,63 @@
+.program-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  
+  &-item {
+    border: 2px solid #2e2e2e;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+
+    display: flex;
+    flex-direction: column;
+
+    cursor: pointer;
+
+    &-header, &-content {
+      padding: 0.5rem 1rem;
+    }
+
+    &-header {
+    
+      .program-id {
+        font-weight: 700; 
+        color: #8e8e8e;
+      }
+
+      .program-operation {
+        font-size: 2rem;
+        margin: 0;
+        font-weight: 300;
+      }
+    }
+
+    &-content {
+      
+      .program-details {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        &-item {
+          width: 200px;
+
+          display: flex;
+          justify-content: space-between;
+
+          > span:first-child {
+            font-weight: 700;
+          }
+        }
+      }
+    }
+
+    &:hover {
+      border-color: #3D60A7;
+    }
+
+    transition: all 300ms ease;
+  }
+}

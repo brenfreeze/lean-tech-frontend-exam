@@ -1,5 +1,7 @@
 import React from 'react'
 
+import ListItem from './ListItem'
+
 const List = ({ programs }) => {
   console.log(programs)
 
@@ -7,9 +9,7 @@ const List = ({ programs }) => {
     <ul className="program-list">
       {
         programs.map(program => (
-          <li className="program-list-item">
-            { program.id }
-          </li>
+          <ListItem {...program} />
         ))
       }
     </ul>
