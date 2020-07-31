@@ -1,0 +1,23 @@
+.title {
+  font-size: 2rem;
+  margin: 0;
+  margin-bottom: 1rem;
+  font-weight: 300;
+}
+
+.program-form {
+  display: flex;
+  flex-direction: column;
+
+  > .submit-btn {
+    font-family: inherit;
+    border: none;
+    border-radius: 5px;
+    background: #2c2c2c;
+    color: #ffffff;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    outline: none;
+    cursor: pointer;
+  }
+}

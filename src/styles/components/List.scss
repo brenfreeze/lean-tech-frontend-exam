@@ -38,6 +38,7 @@
       
       .program-details {
         margin: 0;
+        margin-bottom: 1rem;
         padding: 0;
         list-style: none;
 
@@ -52,12 +53,30 @@
           }
         }
       }
+
+      .program-footer {
+
+        > a:first-child {
+          margin-right: 1rem;
+        }
+      }
     }
 
     &:hover {
       border-color: #3D60A7;
     }
 
+    
+    &.add-new {
+      padding: 1rem;
+
+      > h3 {
+        font-weight: 400;
+        margin: 0;
+      }
+    }
+
     transition: all 300ms ease;
   }
+
 }

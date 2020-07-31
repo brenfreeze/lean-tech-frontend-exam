@@ -33,6 +33,10 @@ const ListItem = ({ id, operation, __typename, ...rest }) => {
               </li>
             ))}
           </ul>
+          <span className="program-footer">
+            <a href="#">Edit</a>
+            <a href="#">Delete</a>
+          </span>
         </div>
       )}
     </li>
