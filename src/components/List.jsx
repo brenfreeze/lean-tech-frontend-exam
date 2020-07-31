@@ -2,12 +2,12 @@ import React from 'react'
 
 import ListItem from './ListItem'
 
-const List = ({ programs }) => {
+const List = ({ programs, ...props }) => {
   return (
     <ul className="program-list">
       {
         programs.map(program => (
-          <ListItem {...program} />
+          <ListItem {...program} {...props} />
         ))
       }
     </ul>

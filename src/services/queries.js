@@ -33,3 +33,21 @@ export const ADD_PROGRAM = gql`
     }
   } 
 `
+
+export const UPDATE_PROGRAM = gql`
+  mutation UpdateProgram(
+    $id: ID!
+    $program: ProgramParams!
+  ) {
+    updateProgram(
+      id: $id
+      program: $program
+    ) {
+      id
+      operation
+      processId
+      processStep
+      productFamily
+    }
+  }
+`

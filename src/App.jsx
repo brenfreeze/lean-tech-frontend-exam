@@ -6,10 +6,14 @@ import ProgramForm from './components/ProgramForm'
 import { GET_PROGRAMS } from './services/queries'
 
 const App = () => {
-  const [ modalOpen, setModalOpen ] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [toUpdate, setToUpdate] = useState({})
   const { loading, error, data } = useQuery(GET_PROGRAMS)
 
   const toggleModal = () => {
+    if (modalOpen) {
+      setToUpdate({})
+    }
     setModalOpen(!modalOpen)
   }
 
@@ -28,11 +32,19 @@ const App = () => {
           'loading...' :
           error ?
             'error' :
-            <List programs={data.programs} />
+            <List
+              setToUpdate={setToUpdate}
+              toggleModal={toggleModal}
+              programs={data.programs}
+            />
       }
       {
         modalOpen && (
-          <ProgramForm onClose={toggleModal} />
+          <ProgramForm
+            toUpdate={toUpdate}
+            setToUpdate={setToUpdate}
+            onClose={toggleModal}
+          />
         )
       }
     </div>

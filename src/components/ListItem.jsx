@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-const ListItem = ({ id, operation, __typename, ...rest }) => {
+const ListItem = ({ setToUpdate, toggleModal, id, operation, __typename, ...rest }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const restData = Object.keys(rest)
@@ -14,6 +14,18 @@ const ListItem = ({ id, operation, __typename, ...rest }) => {
     const finalResult = result.charAt(0).toUpperCase() + result.slice(1)
 
     return finalResult
+  }
+
+  const onUpdateClick = e => {
+    e.stopPropagation()
+
+    setToUpdate({
+      id,
+      operation,
+      ...rest
+    })
+
+    toggleModal()
   }
 
   return (
@@ -34,7 +46,7 @@ const ListItem = ({ id, operation, __typename, ...rest }) => {
             ))}
           </ul>
           <span className="program-footer">
-            <a href="#">Edit</a>
+            <a href="#" onClick={onUpdateClick}>Update</a>
             <a href="#">Delete</a>
           </span>
         </div>
