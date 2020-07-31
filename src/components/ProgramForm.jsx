@@ -57,7 +57,7 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
   const onProgramFormSubmit = e => {
     e.preventDefault()
 
-    if (Object.keys(toUpdate)) {
+    if (Object.keys(toUpdate).length) {
       updateProgramSubmit(e)
 
       return

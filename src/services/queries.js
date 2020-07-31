@@ -25,7 +25,6 @@ export const ADD_PROGRAM = gql`
       processStep: $processStep
       productFamily: $productFamily
     ) {
-      id
       operation
       processId
       processStep
@@ -42,6 +41,22 @@ export const UPDATE_PROGRAM = gql`
     updateProgram(
       id: $id
       program: $program
+    ) {
+      id
+      operation
+      processId
+      processStep
+      productFamily
+    }
+  }
+`
+
+export const DELETE_PROGRAM = gql`
+  mutation DeleteProgram(
+    $id: ID!
+  ) {
+    deleteProgram(
+      id: $id
     ) {
       id
       operation

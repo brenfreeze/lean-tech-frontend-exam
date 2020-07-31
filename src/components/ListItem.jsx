@@ -1,7 +1,15 @@
 import React, { useState } from "react"
+import { useMutation } from '@apollo/client'
+
+import { DELETE_PROGRAM, GET_PROGRAMS } from '../services/queries'
 
 const ListItem = ({ setToUpdate, toggleModal, id, operation, __typename, ...rest }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [deleteProgram] = useMutation(DELETE_PROGRAM, {
+    refetchQueries: [{
+      query: GET_PROGRAMS
+    }]
+  })
 
   const restData = Object.keys(rest)
   
@@ -28,6 +36,19 @@ const ListItem = ({ setToUpdate, toggleModal, id, operation, __typename, ...rest
     toggleModal()
   }
 
+  const onDeleteClick = e => {
+    e.stopPropagation()
+
+    deleteProgram({
+      variables: {
+        id
+      }
+    })
+      .then(() => {
+        alert('Deleted')
+      })
+  }
+
   return (
     <li key={id} className="program-list-item" onClick={toggleItem}>
       <div className="program-list-item-header">
@@ -47,7 +68,7 @@ const ListItem = ({ setToUpdate, toggleModal, id, operation, __typename, ...rest
           </ul>
           <span className="program-footer">
             <a href="#" onClick={onUpdateClick}>Update</a>
-            <a href="#">Delete</a>
+            <a href="#" onClick={onDeleteClick}>Delete</a>
           </span>
         </div>
       )}
