@@ -1,6 +1,7 @@
 import {
-  GET_PROGRAMS
-} from '../actionTypes'
+  GET_PROGRAMS,
+  DELETE_PROGRAM
+} from './actionTypes'
 
 const initialState = {
   programs: []
@@ -12,6 +13,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         programs: action.payload.programs
+      }
+    case DELETE_PROGRAM:
+      const newPrograms = state.programs.filter(program => program.id !== action.payload.programId)
+
+      return {
+        ...state,
+        programs: newPrograms
       }
     default: {
       return state

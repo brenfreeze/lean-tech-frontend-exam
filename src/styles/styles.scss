@@ -10,6 +10,26 @@ body {
   font-family: 'Lato', sans-serif;
 }
 
+
+
+.btn {
+  font-family: inherit;
+  border: none;
+  border-radius: 5px;
+  background: #2c2c2c;
+  color: #ffffff;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  outline: none;
+  cursor: pointer;
+
+  &.outline {
+    color: #000000;
+    background: none;
+    border: 1px solid #2c2c2c;
+  }
+}
+
 @import './components/App.scss';
 @import './components/List.scss';
 @import './components/Modal.scss';

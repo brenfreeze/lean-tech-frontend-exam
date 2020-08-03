@@ -72,13 +72,7 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
         onSubmit={onProgramFormSubmit}
         validate={validator}
       >
-        {({
-          errors,
-          touched,
-          values,
-          handleChange,
-          handleSubmit,
-        }) => (
+        {({ errors, touched, values, handleChange, handleSubmit, }) => (
             <form
               className="program-form"
               onSubmit={handleSubmit}
@@ -120,7 +114,7 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
                 onChange={handleChange}
                 value={values.productFamily}
               />
-              <button type="submit" className="submit-btn">
+              <button type="submit" className="btn">
                 Save
               </button>
             </form>

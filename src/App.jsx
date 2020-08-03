@@ -5,10 +5,12 @@ import { useQuery } from '@apollo/client'
 
 import List from './components/List'
 import ProgramForm from './components/ProgramForm'
+import DialogModal from './components/DialogModal'
+
 import { GET_PROGRAMS } from './services/queries'
 import { getPrograms } from './store/reducers/Programs/actions'
 
-const App = ({ programs, getPrograms }) => {
+const App = ({ dialog, programs, getPrograms }) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [toUpdate, setToUpdate] = useState({})
   const { loading, error, data } = useQuery(GET_PROGRAMS)
@@ -41,28 +43,27 @@ const App = ({ programs, getPrograms }) => {
         toggleModal={toggleModal}
         programs={programs}
       />
-      {
-        modalOpen && (
-          <ProgramForm
-            toUpdate={toUpdate}
-            setToUpdate={setToUpdate}
-            onClose={toggleModal}
-          />
-        )
-      }
+      {modalOpen && (
+        <ProgramForm
+          toUpdate={toUpdate}
+          setToUpdate={setToUpdate}
+          onClose={toggleModal}
+        />
+      )}
+      {dialog.isOpen && (
+        <DialogModal />
+      )}
     </div>
   )
 }
 
-const mapStateToProps = state => {
-  const {
-    ProgramsState: {
-      programs
-    }
-  } = state
+const mapStateToProps = ({ ProgramsState, UtilitiesState }) => {
+  const { programs } = ProgramsState
+  const { dialog } = UtilitiesState
 
   return {
-    programs
+    programs,
+    dialog
   }
 }
 
