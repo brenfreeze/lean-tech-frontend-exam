@@ -23,6 +23,11 @@ body {
   outline: none;
   cursor: pointer;
 
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   &.outline {
     color: #000000;
     background: none;
