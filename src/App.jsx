@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
-import { useQuery, gql } from '@apollo/client'
+import React, { useState, useEffect } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { useQuery } from '@apollo/client'
 
 import List from './components/List'
 import ProgramForm from './components/ProgramForm'
 import { GET_PROGRAMS } from './services/queries'
+import { getPrograms } from './store/reducers/Programs/actions'
 
-const App = () => {
+const App = ({ programs, getPrograms }) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [toUpdate, setToUpdate] = useState({})
   const { loading, error, data } = useQuery(GET_PROGRAMS)
@@ -17,6 +20,12 @@ const App = () => {
     setModalOpen(!modalOpen)
   }
 
+  useEffect(() => {
+    if (!error && !loading) {
+      getPrograms(data.programs)
+    }
+  }, [ error, loading, data ])
+
   return (
     <div className="container">
       <div className="header">
@@ -27,17 +36,11 @@ const App = () => {
           + Add New Program
         </h3>
       </a>
-      {
-        loading ?
-          'loading...' :
-          error ?
-            'error' :
-            <List
-              setToUpdate={setToUpdate}
-              toggleModal={toggleModal}
-              programs={data.programs}
-            />
-      }
+      <List
+        setToUpdate={setToUpdate}
+        toggleModal={toggleModal}
+        programs={programs}
+      />
       {
         modalOpen && (
           <ProgramForm
@@ -51,4 +54,22 @@ const App = () => {
   )
 }
 
-export default App
+const mapStateToProps = state => {
+  const {
+    ProgramsState: {
+      programs
+    }
+  } = state
+
+  return {
+    programs
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({
+    getPrograms
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
