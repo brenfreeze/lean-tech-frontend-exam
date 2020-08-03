@@ -25,6 +25,7 @@ export const ADD_PROGRAM = gql`
       processStep: $processStep
       productFamily: $productFamily
     ) {
+      id
       operation
       processId
       processStep

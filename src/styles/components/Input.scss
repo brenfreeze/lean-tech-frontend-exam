@@ -12,6 +12,20 @@
     border: 1px solid #000000;
     border-radius: 5px;
     font-size: 1rem;
-    margin-bottom: 1rem
+    margin-bottom: 1rem;
+    outline: none;
+  }
+
+  &.input-error {
+    color: #ff0033;
+
+    > input {
+      margin-bottom: 0.25rem;
+      border-color: #ff0033;
+    }
+
+    > .error-label {
+      margin-bottom: 1rem;
+    }
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
 import Modal from './Modal'
@@ -6,22 +7,14 @@ import Input from './Input'
 
 import {
   ADD_PROGRAM,
-  UPDATE_PROGRAM,
-  GET_PROGRAMS
+  UPDATE_PROGRAM
 } from '../services/queries'
+import validator from '../services/validator'
 
 const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
-  const [addProgram] = useMutation(ADD_PROGRAM, {
-    refetchQueries: [{
-      query: GET_PROGRAMS
-    }]
-  })
+  const [addProgram] = useMutation(ADD_PROGRAM)
 
-  const [updateProgram] = useMutation(UPDATE_PROGRAM, {
-    refetchQueries: [{
-      query: GET_PROGRAMS
-    }]
-  })
+  const [updateProgram] = useMutation(UPDATE_PROGRAM)
 
   const addProgramSubmit = (e) => {
     addProgram({
@@ -32,12 +25,12 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
         productFamily: e.target.productFamily.value
       }
     })
-      .then(() => {
+      .then((result) => {
         props.onClose()
       })
   }
 
-  const updateProgramSubmit = (e) => {
+  const updateProgramSubmit = (values) => {
     updateProgram({
       variables: {
         id: toUpdate.id,
@@ -54,16 +47,8 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
       })
   }
 
-  const onProgramFormSubmit = e => {
-    e.preventDefault()
-
-    if (Object.keys(toUpdate).length) {
-      updateProgramSubmit(e)
-
-      return
-    }
-
-    addProgramSubmit(e)
+  const onProgramFormSubmit = values => {
+    console.log(values)
   }
 
   return (
@@ -71,43 +56,73 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
       <h1 className="title">
         { Object.keys(toUpdate).length ? `Update ${toUpdate.operation}` : 'Add New Program'}
       </h1>
-      <form
-        className="program-form"
+      <Formik
+        initialValues={{
+          operation: '',
+          processId: '',
+          processStep: 0,
+          productFamily: ''
+        }}
         onSubmit={onProgramFormSubmit}
-        autoComplete="off"
+        validate={validator}
+        isInitialValid
       >
-        <Input
-          type="text"
-          id="operation"
-          name="operation"
-          label="Operation"
-          defaultValue={toUpdate?.operation || ''}
-        />
-        <Input
-          type="text"
-          id="processId"
-          name="processId"
-          label="Process ID"
-          defaultValue={toUpdate?.processId || ''}
-        />
-        <Input
-          type="number"
-          id="processStep"
-          name="processStep"
-          label="Process Step"
-          defaultValue={toUpdate?.processStep || ''}
-        />
-        <Input
-          type="text"
-          id="productFamily"
-          name="productFamily"
-          label="Product Family"
-          defaultValue={toUpdate?.productFamily || ''}
-        />
-        <button type="submit" className="submit-btn">
-          Save
-        </button>
-      </form>
+        {({
+          errors,
+          touched,
+          values,
+          isValid,
+          handleChange,
+          handleSubmit
+        }) => (
+          <form
+            className="program-form"
+            onSubmit={handleSubmit}
+            autoComplete="off"
+          >
+            <Input
+              type="text"
+              id="operation"
+              name="operation"
+              label="Operation *"
+              isError={touched && errors.operation}
+              onChange={handleChange}
+              values={values.operation}
+            />
+            <Input
+              type="text"
+              id="processId"
+              name="processId"
+              label="Process ID *"
+              isError={touched && errors.processId}
+              onChange={handleChange}
+              values={values.processId}
+            />
+            <Input
+              type="number"
+              id="processStep"
+              name="processStep"
+              label="Process Step *"
+              isError={touched && errors.processStep}
+              
+              onChange={handleChange}
+              values={values.processStep}
+            />
+            <Input
+              type="text"
+              id="productFamily"
+              name="productFamily"
+              label="Product Family *"
+              isError={touched && errors.productFamily}
+              onChange={handleChange}
+              values={values.productFamily}
+            />
+            <button type="submit" className="submit-btn">
+              Save
+            </button>
+          </form>
+        )}
+      </Formik>
     </Modal>
   )
 }
