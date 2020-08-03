@@ -59,8 +59,8 @@ const ListItem = ({ setToUpdate, toggleModal, id, operation, __typename, ...rest
       {isOpen && (
         <div className="program-list-item-content">
           <ul className="program-details">
-            {restData.map((key) => (
-              <li className="program-details-item">
+            {restData.map((key, index) => (
+              <li key={index} className="program-details-item">
                 <span>{transformCase(key)}</span>
                 <span>{rest[key]}</span>
               </li>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
@@ -12,17 +12,30 @@ import {
 import validator from '../services/validator'
 
 const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
+  const [initialFormValues, setInitialFormValues] = useState({
+    operation: '',
+    processId: '',
+    processStep: 0,
+    productFamily: ''
+  })
   const [addProgram] = useMutation(ADD_PROGRAM)
-
   const [updateProgram] = useMutation(UPDATE_PROGRAM)
+
+  useEffect(() => {
+    if (Object.keys(toUpdate).length) {
+      setInitialFormValues({
+        operation: toUpdate.operation,
+        processId: toUpdate.processId,
+        processStep: toUpdate.processStep,
+        productFamily: toUpdate.productFamily,
+      })
+    }
+  }, [ ])
 
   const addProgramSubmit = (e) => {
     addProgram({
       variables: {
-        operation: e.target.operation.value,
-        processId: e.target.processId.value,
-        processStep: parseInt(e.target.processStep.value),
-        productFamily: e.target.productFamily.value
+        ...values
       }
     })
       .then((result) => {
@@ -35,10 +48,7 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
       variables: {
         id: toUpdate.id,
         program: {
-          operation: e.target.operation.value,
-          processId: e.target.processId.value,
-          processStep: parseInt(e.target.processStep.value),
-          productFamily: e.target.productFamily.value
+          ...values
         }
       }
     })
@@ -57,71 +67,64 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
         { Object.keys(toUpdate).length ? `Update ${toUpdate.operation}` : 'Add New Program'}
       </h1>
       <Formik
-        initialValues={{
-          operation: '',
-          processId: '',
-          processStep: 0,
-          productFamily: ''
-        }}
+        enableReinitialize
+        initialValues={initialFormValues}
         onSubmit={onProgramFormSubmit}
         validate={validator}
-        isInitialValid
       >
         {({
           errors,
           touched,
           values,
-          isValid,
           handleChange,
-          handleSubmit
+          handleSubmit,
         }) => (
-          <form
-            className="program-form"
-            onSubmit={handleSubmit}
-            autoComplete="off"
-          >
-            <Input
-              type="text"
-              id="operation"
-              name="operation"
-              label="Operation *"
-              isError={touched && errors.operation}
-              onChange={handleChange}
-              values={values.operation}
-            />
-            <Input
-              type="text"
-              id="processId"
-              name="processId"
-              label="Process ID *"
-              isError={touched && errors.processId}
-              onChange={handleChange}
-              values={values.processId}
-            />
-            <Input
-              type="number"
-              id="processStep"
-              name="processStep"
-              label="Process Step *"
-              isError={touched && errors.processStep}
-              
-              onChange={handleChange}
-              values={values.processStep}
-            />
-            <Input
-              type="text"
-              id="productFamily"
-              name="productFamily"
-              label="Product Family *"
-              isError={touched && errors.productFamily}
-              onChange={handleChange}
-              values={values.productFamily}
-            />
-            <button type="submit" className="submit-btn">
-              Save
-            </button>
-          </form>
-        )}
+            <form
+              className="program-form"
+              onSubmit={handleSubmit}
+              autoComplete="off"
+            >
+              <Input
+                type="text"
+                id="operation"
+                name="operation"
+                label="Operation *"
+                isError={touched.operation && errors.operation}
+                onChange={handleChange}
+                value={values.operation}
+              />
+              <Input
+                type="text"
+                id="processId"
+                name="processId"
+                label="Process ID *"
+                isError={touched.processId && errors.processId}
+                onChange={handleChange}
+                value={values.processId}
+              />
+              <Input
+                type="number"
+                id="processStep"
+                name="processStep"
+                label="Process Step *"
+                isError={touched.processStep && errors.processStep}
+                onChange={handleChange}
+                value={values.processStep}
+              />
+              <Input
+                type="text"
+                id="productFamily"
+                name="productFamily"
+                label="Product Family *"
+                isError={touched.productFamily && errors.productFamily}
+                onChange={handleChange}
+                value={values.productFamily}
+              />
+              <button type="submit" className="submit-btn">
+                Save
+              </button>
+            </form>
+          )}
       </Formik>
     </Modal>
   )
