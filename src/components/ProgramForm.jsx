@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 
@@ -10,8 +12,16 @@ import {
   UPDATE_PROGRAM
 } from '../services/queries'
 import validator from '../services/validator'
+import { openDialog } from '../store/reducers/Utilities/actions'
+import { addProgram as addProgramToStore, } from '../store/reducers/Programs/actions'
 
-const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
+const ProgramForm = ({
+  addProgramToStore,
+  openDialog,
+  toUpdate,
+  setToUpdate,
+  ...props
+}) => {
   const [initialFormValues, setInitialFormValues] = useState({
     operation: '',
     processId: '',
@@ -20,9 +30,10 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
   })
   const [addProgram] = useMutation(ADD_PROGRAM)
   const [updateProgram] = useMutation(UPDATE_PROGRAM)
+  const isUpdating = Object.keys(toUpdate).length
 
   useEffect(() => {
-    if (Object.keys(toUpdate).length) {
+    if (isUpdating) {
       setInitialFormValues({
         operation: toUpdate.operation,
         processId: toUpdate.processId,
@@ -32,13 +43,20 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
     }
   }, [ ])
 
-  const addProgramSubmit = (e) => {
+  const addProgramSubmit = (values) => {
     addProgram({
       variables: {
         ...values
       }
     })
       .then((result) => {
+        const { createProgram } = result.data
+
+        addProgramToStore(createProgram)
+        openDialog({
+          title: `Added ${createProgram.operation}`
+        })
+
         props.onClose()
       })
   }
@@ -52,19 +70,35 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
         }
       }
     })
-      .then(() => {
+      .then((result) => {
+        const { updateProgram } = result.data
+
+        /*
+          Would add an updateProgramFromStore function here,
+          but apollo-client already handles the state update.
+        */
+        openDialog({
+          title: `Updated ${updateProgram.operation}`
+        })
+
         props.onClose()
       })
   }
 
   const onProgramFormSubmit = values => {
-    console.log(values)
+    if (isUpdating) {
+      updateProgramSubmit(values)
+
+      return
+    }
+
+    addProgramSubmit(values)
   }
 
   return (
     <Modal { ...props }>
       <h1 className="title">
-        { Object.keys(toUpdate).length ? `Update ${toUpdate.operation}` : 'Add New Program'}
+        { isUpdating ? `Update ${toUpdate.operation}` : 'Add New Program'}
       </h1>
       <Formik
         enableReinitialize
@@ -124,4 +158,11 @@ const ProgramForm = ({ toUpdate, setToUpdate, ...props }) => {
   )
 }
 
-export default ProgramForm
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({
+    openDialog,
+    addProgramToStore,
+  }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(ProgramForm)

@@ -1,5 +1,8 @@
 import {
-  GET_PROGRAMS, DELETE_PROGRAM
+  GET_PROGRAMS,
+  ADD_PROGRAM,
+  DELETE_PROGRAM,
+  UPDATE_PROGRAM,
 } from './actionTypes'
 
 export const getPrograms = (programsObj) => {
@@ -7,6 +10,24 @@ export const getPrograms = (programsObj) => {
     type: GET_PROGRAMS,
     payload: {
       programs: programsObj
+    }
+  }
+}
+
+export const addProgram = (programObj) => {
+  return {
+    type: ADD_PROGRAM,
+    payload: {
+      program: programObj
+    }
+  }
+}
+
+export const updateProgram = (programObj) => {
+  return {
+    type: UPDATE_PROGRAM,
+    payload: {
+      program: programObj
     }
   }
 }

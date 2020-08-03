@@ -7,7 +7,16 @@ import { DELETE_PROGRAM } from '../services/queries'
 import { openDialog } from "../store/reducers/Utilities/actions"
 import { deleteProgram as deleteProgramFromStore } from "../store/reducers/Programs/actions"
 
-const ListItem = ({ deleteProgramFromStore, openDialog, setToUpdate, toggleModal, id, operation, __typename, ...rest }) => {
+const ListItem = ({
+  deleteProgramFromStore,
+  openDialog,
+  setToUpdate,
+  toggleModal,
+  id,
+  operation,
+  __typename,
+  ...rest
+}) => {
   const [isOpen, setIsOpen] = useState(false)
   const [deleteProgram] = useMutation(DELETE_PROGRAM)
 
@@ -27,13 +36,19 @@ const ListItem = ({ deleteProgramFromStore, openDialog, setToUpdate, toggleModal
   const onUpdateClick = e => {
     e.stopPropagation()
 
-    setToUpdate({
-      id,
-      operation,
-      ...rest
-    })
+    openDialog({
+      title: `Update ${operation}`,
+      message: `Are you sure you want to update ${operation}?`,
+      onConfirmClick: () => {
+        setToUpdate({
+          id,
+          operation,
+          ...rest
+        })
 
-    toggleModal()
+        toggleModal()
+      }
+    })
   }
 
   const onDeleteClick = e => {
@@ -59,7 +74,6 @@ const ListItem = ({ deleteProgramFromStore, openDialog, setToUpdate, toggleModal
           })
       }
     })
-
   }
 
   return (
